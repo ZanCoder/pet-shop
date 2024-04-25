@@ -1,0 +1,244 @@
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{/admin/layout :: dynamic(~{::body})}">
+<body>
+<div style="padding-top: 70px; padding-left: 20px;">
+    <h3>Product List</h3>
+    <hr/>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalCreate">
+        Create
+    </button>
+    <hr/>
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+        [[${message}]]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+        <form action="#" th:action="@{/admin/product/page/1}" method="GET" class="row g-3">
+            <div class="col-auto">
+                <input type="text" class="form-control" placeholder="Search..." name="name">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-3">Search</button>
+            </div>
+        </form>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Available</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <th scope="row" th:text="${product.id}"></th>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.description}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.quantity}"></td>
+            <td th:text="${product.available ? 'Còn hàng' : 'Hết hàng'}"></td>
+            <td>
+                <button type="button" th:attr="data-id=${product.id}" class="btn btn-warning editBtn"
+                        data-bs-toggle="modal" data-bs-target="#exampleModalUpdate">
+                    Edit
+                </button>
+                |
+                <a class="btn btn-danger" th:href="@{/admin/product/delete(id=${product.id})}"
+                   onclick="return confirm('Bạn có muốn xoá sản phẩm này không?');">
+                    Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="display: flex; justify-content: center;">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination text-center">
+                <li class="page-item"><a class="page-link" th:classappend="${currentPage > 1 ? '' : 'disabled'}"
+                                         th:href="@{'/admin/product/page/1' + '?name=' +${keyword}}">First</a></li>
+                <li class="page-item"><a class="page-link" th:classappend="${currentPage > 1 ? '' : 'disabled'}"
+                                         th:href="@{'/admin/product/page/' + ${currentPage - 1} + '?name=' +${keyword}}">Previous</a>
+                </li>
+
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+                    th:classappend="${currentPage == i ? 'active' : ''}">
+                    <a class="page-link" th:href="@{'/admin/product/page/' + ${i} + '?name=' +${keyword}}">[[${i}]]</a>
+                </li>
+
+                <li class="page-item"><a class="page-link" th:classappend="${currentPage < totalPages ? '' : 'disabled'}"
+                                         th:href="@{'/admin/product/page/' + ${currentPage + 1} + '?name=' +${keyword}}">Next</a>
+                </li>
+                <li class="page-item"><a class="page-link" th:classappend="${currentPage < totalPages ? '' : 'disabled'}"
+                                         th:href="@{'/admin/product/page/' + ${totalPages} + '?name=' +${keyword}}">Last</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Modal Create -->
+    <div class="modal fade" id="exampleModalCreate" tabindex="-1" aria-labelledby="exampleModalCreateLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCreateLabel">Modal Create</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" th:action="@{/admin/product/save}" method="POST" th:object="${product}">
+                        <div class="form-group">
+                            <label for="exampleInputName1">Name</label>
+                            <input type="text" class="form-control" id="exampleInputName1" aria-describedby="nameHelp"
+                                   name="name"
+                                   th:field="*{name}" placeholder="Nhập tên sản phẩm...">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputDescription1">Description</label>
+                            <input type="text" class="form-control" id="exampleInputDescription1" name="description"
+                                   th:field="*{description}" placeholder="Nhập mô tả...">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPrice1">Price</label>
+                            <input type="text" class="form-control" id="exampleInputPrice1" name="price"
+                                   th:field="*{price}"
+                                   placeholder="Nhập giá...">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputQuantity1">Quantity</label>
+                            <input type="text" class="form-control" id="exampleInputQuantity1" name="quantity"
+                                   th:field="*{quantity}"
+                                   placeholder="Nhập số lượng...">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputImage1">Image</label>
+                            <input type="text" class="form-control" id="exampleInputImage1" name="image"
+                                   th:field="*{image}"
+                                   placeholder="Nhập Url image...">
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="available" name="available"
+                                           th:checked="${product.available}">
+                                    <label class="form-check-label" for="available">Available</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputCategory1">Category ID</label>
+                            <select id="exampleInputCategory1" class="form-select" aria-label="Default select example"
+                                    th:field="*{categoryId}">
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Update -->
+    <div class="modal fade" id="exampleModalUpdate" tabindex="-1" aria-labelledby="exampleModalUpdateLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalUpdateLabel">Modal Update</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" th:action="@{/admin/product/save}" method="POST" th:object="${product}">
+                        <input type="hidden" name="id" th:field="*{id}">
+                        <div class="form-group">
+                            <label for="exampleInputName1">Name</label>
+                            <input type="text" class="form-control" id="exampleInputName2" aria-describedby="nameHelp"
+                                   name="name"
+                                   th:field="*{name}" placeholder="Nhập tên sản phẩm...">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputDescription1">Description</label>
+                            <input type="text" class="form-control" id="exampleInputDescription2" name="description"
+                                   th:field="*{description}" placeholder="Nhập mô tả...">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPrice1">Price</label>
+                            <input type="text" class="form-control" id="exampleInputPrice2" name="price"
+                                   th:field="*{price}"
+                                   placeholder="Nhập giá...">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputQuantity1">Quantity</label>
+                            <input type="text" class="form-control" id="exampleInputQuantity2" name="quantity"
+                                   th:field="*{quantity}"
+                                   placeholder="Nhập số lượng...">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputImage1">Image</label>
+                            <input type="text" class="form-control" id="exampleInputImage2" name="image"
+                                   th:field="*{image}"
+                                   placeholder="Nhập Url image...">
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="available1" name="available"
+                                           th:checked="${product.available}">
+                                    <label class="form-check-label" for="available1">Available</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputCategory2">Category ID</label>
+                            <select id="exampleInputCategory2" class="form-select" aria-label="Default select example"
+                                    th:field="*{categoryId}">
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $(".editBtn").click(function () {
+            productId = $(this).attr("data-id");
+            url = /*[[@{/admin/get-product}]]*/ +productId;
+
+            params = {id: productId};
+            $.get(url, params, function (product) {
+                $("#id").val(product.id);
+                $("#exampleInputName2").val(product.name);
+                $("#exampleInputDescription2").val(product.description);
+                $("#exampleInputPrice2").val(product.price);
+                $("#exampleInputQuantity2").val(product.quantity);
+                $("#exampleInputImage2").val(product.image);
+                $("#available1").prop('checked', product.available);
+                $("#exampleInputCategory2").val(product.categoryId);
+            })
+        })
+    });
+</script>
+</body>
+</html>

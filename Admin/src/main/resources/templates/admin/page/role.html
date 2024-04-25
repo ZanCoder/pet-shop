@@ -1,0 +1,104 @@
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{/admin/layout :: dynamic(~{::body})}">
+<body>
+<div style="padding-top: 70px; padding-left: 20px;">
+    <h3>User List</h3>
+    <hr/>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalCreate">
+        Create
+    </button>
+    <hr/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="role : ${roles}">
+            <th scope="row" th:text="${role.id}"></th>
+            <td th:text="${role.name}"></td>
+            <td>
+                <button type="button" th:attr="data-id=${role.id}" class="btn btn-warning editBtn"
+                        data-bs-toggle="modal" data-bs-target="#exampleModalUpdate">
+                    Edit
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Modal Create -->
+    <div class="modal fade" id="exampleModalCreate" tabindex="-1" aria-labelledby="exampleModalCreateLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCreateLabel">Modal Create</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" th:action="@{/admin/role/save}" method="POST" th:object="${role}">
+                        <div class="form-group">
+                            <label for="exampleInputName1">Name</label>
+                            <input type="text" class="form-control" id="exampleInputName1" aria-describedby="nameHelp"
+                                   name="fullName"
+                                   th:field="*{name}" placeholder="Nhập tên vai trò...">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Update -->
+    <div class="modal fade" id="exampleModalUpdate" tabindex="-1" aria-labelledby="exampleModalUpdateLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalUpdateLabel">Modal Update</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="#" th:action="@{/admin/role/save}" method="POST" th:object="${role}">
+                        <input type="hidden" name="id" th:field="*{id}">
+                        <div class="form-group">
+                            <label for="exampleInputName2">Name</label>
+                            <input type="text" class="form-control" id="exampleInputName2" aria-describedby="nameHelp"
+                                   name="name"
+                                   th:field="*{name}" placeholder="Nhập tên vai trò...">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $(".editBtn").click(function () {
+            roleId = $(this).attr("data-id");
+            url = /*[[@{/admin/get-role}]]*/ + roleId;
+
+            params = {id: roleId};
+            $.get(url, params, function (role) {
+                $("#id").val(role.id);
+                $("#exampleInputName2").val(role.name);
+            })
+        })
+    });
+</script>
+</body>
+</html>

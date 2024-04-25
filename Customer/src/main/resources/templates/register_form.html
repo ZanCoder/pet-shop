@@ -1,0 +1,66 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container">
+    <div class="container-fluid">
+        <h5>Register Form</h5>
+        <form th:action="@{/register/process}" th:object="${registerUser}" method="POST">
+            <input type="hidden" th:field="*{avatar}" >
+            <div class="alert alert-danger" th:if="${myError}">
+                <span th:text="${myError}"></span>
+            </div>
+            <div>
+                <label>
+                    <input class="form-control" type="text" th:field="*{username}" placeholder="Enter username... (*)">
+                </label>
+                <div th:if="${#fields.hasErrors('username')}">
+                    <p th:each="e : ${#fields.errors('username')}" th:text="${e}"></p>
+                </div>
+            </div>
+            <div>
+                <label>
+                    <input class="form-control" type="password" th:field="*{password}" placeholder="Enter password... (*)">
+                </label>
+                <div th:if="${#fields.hasErrors('password')}">
+                    <p th:each="e : ${#fields.errors('password')}" th:text="${e}"></p>
+                </div>
+            </div>
+            <div>
+                <label>
+                    <input class="form-control" type="text" th:field="*{fullName}" placeholder="Enter FullName... (*)">
+                </label>
+                <div th:if="${#fields.hasErrors('fullName')}">
+                    <p th:each="e : ${#fields.errors('fullName')}" th:text="${e}"></p>
+                </div>
+            </div>
+            <div>
+                <label>
+                    <input class="form-control" type="text" th:field="*{email}" placeholder="Enter email... (*)">
+                </label>
+                <div th:if="${#fields.hasErrors('email')}">
+                    <p th:each="e : ${#fields.errors('email')}" th:text="${e}"></p>
+                </div>
+            </div>
+            <div>
+                <label>
+                    <input class="form-control" type="text" th:field="*{address}" placeholder="Enter address... (*)">
+                </label>
+                <div th:if="${#fields.hasErrors('address')}">
+                    <p th:each="e : ${#fields.errors('address')}" th:text="${e}"></p>
+                </div>
+            </div>
+            <div>
+                <label>
+                    <input class="form-control" type="text" th:field="*{phoneNumber}" placeholder="Enter phone number... (*)">
+                </label>
+                <div th:if="${#fields.hasErrors('phoneNumber')}">
+                    <p th:each="e : ${#fields.errors('phoneNumber')}" th:text="${e}"></p>
+                </div>
+            </div>
+            <div>
+                <input class="btn btn-success" type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

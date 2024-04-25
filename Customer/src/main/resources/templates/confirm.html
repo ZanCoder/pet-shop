@@ -1,0 +1,14 @@
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{/layout :: dynamic(~{::body})}">
+<body>
+<h5>Register Confirm</h5>
+<hr/>
+<h3 style="color: green;">Register Success!</h3>
+<div>
+    <p th:text="${session.myUser.username}"></p>
+    <p th:text="${session.myUser.fullName}"></p>
+</div>
+<a th:href="@{/login}">Đăng nhập với tài khoản mới</a>
+</body>
+</html>

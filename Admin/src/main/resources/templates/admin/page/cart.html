@@ -1,0 +1,63 @@
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{/admin/layout :: dynamic(~{::body})}">
+<body>
+<div style="padding-top: 70px; padding-left: 20px;">
+    <h3>Cart</h3>
+    <hr/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Description</th>
+            <th scope="col">Image</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">User Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cart : ${carts}">
+            <th scope="row" th:text="${cart.id}"></th>
+            <td th:text="${cart.name}"></td>
+            <td th:text="${cart.price}"></td>
+            <td th:text="${cart.description}"></td>
+            <td th:text="${cart.image}"></td>
+            <td th:text="${cart.quantity}"></td>
+            <td th:text="${cart.user.fullName}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <hr/>
+    <h3>Cart Detail</h3>
+    <hr/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Product Code</th>
+            <th scope="col">Voucher</th>
+            <th scope="col">Transportation Costs</th>
+            <th scope="col">Tax</th>
+            <th scope="col">Total Product</th>
+            <th scope="col">Cart ID</th>
+            <th scope="col">Product ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cartDetail : ${cartDetails}">
+            <th scope="row" th:text="${cartDetail.id}"></th>
+            <td th:text="${cartDetail.productCode}"></td>
+            <td th:text="${cartDetail.voucher}"></td>
+            <td th:text="${cartDetail.transportationCosts}"></td>
+            <td th:text="${cartDetail.tax}"></td>
+            <td th:text="${cartDetail.totalProduct}"></td>
+            <td th:text="${cartDetail.cartId}"></td>
+            <td th:text="${cartDetail.productId}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
